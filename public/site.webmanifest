@@ -1,0 +1,14 @@
+{
+  "name": "Decent Fitness",
+  "short_name": "Decent Fitness",
+  "description": "Strength & fitness gym in Chandrima Model Town, Mohammadpur, Dhaka. Women 8 AM – 4 PM, men 4 PM – 11 PM.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#141311",
+  "theme_color": "#141311",
+  "icons": [
+    { "src": "/assets/icons/logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icons/logo-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

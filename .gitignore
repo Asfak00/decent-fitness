@@ -1,0 +1,13 @@
+node_modules
+dist
+*.local
+.DS_Store
+# raw Facebook downloads & working files (source material, not shipped)
+_raw
+_sheet*.jpg
+_raw_urls.txt
+_reel_urls.txt
+
+# local env & tooling
+.env
+.claude
