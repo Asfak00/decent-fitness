@@ -10,16 +10,16 @@ export interface FaqItem {
 export const faq: FaqItem[] = [
   {
     q: 'What are the gym opening hours?',
-    a: 'Training runs from 8:00 AM to 11:00 PM, split into a women’s shift and a men’s shift.',
+    a: 'Training runs from 8:00 AM to 11:00 PM in three sessions: men 8:00 AM – 1:00 PM, women 1:00 PM – 4:30 PM, and men again 4:30 PM – 11:00 PM.',
   },
   {
     q: 'What is the female workout schedule?',
-    a: 'Women train from 8:00 AM to 4:00 PM. These are dedicated, women-only hours.',
+    a: 'Women train from 1:00 PM to 4:30 PM. These are dedicated, women-only hours.',
     ask: { intent: 'female', label: 'Ask about the women’s shift' },
   },
   {
     q: 'What is the male workout schedule?',
-    a: 'Men train from 4:00 PM to 11:00 PM. The closing time may be slightly earlier, so please confirm on WhatsApp before a late visit.',
+    a: 'Men have two sessions: 8:00 AM to 1:00 PM in the morning, and 4:30 PM to 11:00 PM in the evening.',
     ask: { intent: 'male', label: 'Ask about the men’s shift' },
   },
   {

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Info } from 'lucide-react'
-import { shifts, type Shift } from '../data/gym'
+import { groupInfo, sessions, sessionsFor, type Session, type ShiftGroup } from '../data/gym'
 import { useShiftNow } from '../hooks'
 import { SectionHeading } from './SectionHeading'
 import { Reveal } from './ui/Reveal'
@@ -9,6 +9,9 @@ import { WaButton } from './ui/WaButton'
 const DAY_START = 6
 const DAY_END = 24
 const pct = (h: number) => ((h - DAY_START) / (DAY_END - DAY_START)) * 100
+
+/** Morning / Afternoon / Evening, from a session's start hour */
+const partOfDay = (s: Session) => (s.start < 12 ? 'Morning' : s.start < 16 ? 'Afternoon' : 'Evening')
 
 export function TrainingSchedule() {
   const now = useShiftNow()
@@ -21,24 +24,26 @@ export function TrainingSchedule() {
           index="10"
           label="Training schedule"
           title={['Your hours.', 'Your space.']}
-          aside="The day is split in two: women train in the morning and afternoon, men in the evening."
+          aside="The day runs in three sessions: men in the morning, women in the afternoon, and men again in the evening."
         />
 
         {/* Day timeline */}
         <Reveal className="mt-16 lg:mt-24">
           <div className="relative">
             <div className="relative h-14 overflow-hidden bg-ink-3 sm:h-16">
-              {shifts.map((s) => (
+              {sessions.map((s, i) => (
                 <motion.div
                   key={s.id}
-                  className={`absolute inset-y-0 flex items-center px-3 ${s.id === 'women' ? 'bg-bronze text-ink' : 'bg-bone text-ink'}`}
+                  className={`absolute inset-y-0 flex items-center justify-center px-1 sm:justify-start sm:px-3 ${
+                    s.group === 'women' ? 'bg-bronze text-ink' : 'bg-bone text-ink'
+                  } ${i > 0 ? 'border-l-2 border-ink' : ''}`}
                   style={{ left: `${pct(s.start)}%`, width: `${pct(s.end) - pct(s.start)}%`, originX: 0 }}
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: s.id === 'men' ? 0.25 : 0 }}
+                  transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: i * 0.2 }}
                 >
-                  <span className="display truncate text-lg sm:text-2xl">{s.label}</span>
+                  <span className="display overflow-hidden text-[0.8rem] whitespace-nowrap min-[400px]:text-base sm:text-2xl">{s.label}</span>
                 </motion.div>
               ))}
               {showMarker && (
@@ -61,30 +66,32 @@ export function TrainingSchedule() {
           </div>
         </Reveal>
 
-        {/* Panels */}
+        {/* Panels, one per group */}
         <div className="mt-14 grid gap-4 md:grid-cols-2 lg:mt-20 lg:gap-6">
-          {shifts.map((s, i) => (
-            <ShiftPanel key={s.id} shift={s} live={now.current?.id === s.id} delay={i * 0.1} />
+          {(['women', 'men'] as ShiftGroup[]).map((g, i) => (
+            <GroupPanel key={g} group={g} live={now.current?.group === g} delay={i * 0.1} />
           ))}
         </div>
 
         <p className="mt-6 flex items-start gap-2 text-sm text-smoke">
           <Info className="mt-0.5 size-4 shrink-0" />
-          Times follow Bangladesh time (GMT+6). The men’s shift may close slightly before 11 PM, so check on WhatsApp
-          before a late visit.
+          Times follow Bangladesh time (GMT+6).
         </p>
       </div>
     </section>
   )
 }
 
-function ShiftPanel({ shift, live, delay }: { shift: Shift; live: boolean; delay: number }) {
-  const women = shift.id === 'women'
+function GroupPanel({ group, live, delay }: { group: ShiftGroup; live: boolean; delay: number }) {
+  const women = group === 'women'
+  const info = groupInfo[group]
+  const list = sessionsFor(group)
+
   return (
-    <Reveal delay={delay}>
+    <Reveal delay={delay} className="h-full">
       <article
         className={`relative flex h-full flex-col overflow-hidden p-7 sm:p-10 ${women ? 'bg-ink-2' : 'bg-ink-3'}`}
-        aria-label={`${shift.label}’s shift, ${shift.startLabel} to ${shift.endLabel}`}
+        aria-label={`${info.label}’s training: ${list.map((s) => `${s.startLabel} to ${s.endLabel}`).join(' and ')}`}
       >
         <span className={`absolute inset-x-0 top-0 h-1 ${women ? 'bg-bronze' : 'bg-bone'}`} />
         <div className="flex items-center justify-between gap-4">
@@ -94,29 +101,32 @@ function ShiftPanel({ shift, live, delay }: { shift: Shift; live: boolean; delay
               <span className="size-1.5 rounded-full bg-turf" /> Training now
             </span>
           ) : (
-            <span className="eyebrow text-[0.62rem]! text-smoke">Shift 0{shift.id === 'women' ? 1 : 2}</span>
+            <span className="eyebrow text-[0.62rem]! text-smoke">
+              {list.length} {list.length === 1 ? 'session' : 'sessions'} a day
+            </span>
           )}
         </div>
 
-        <h3 className="display mt-6 text-[clamp(4rem,12vw,8rem)]">{shift.label}</h3>
+        <h3 className="display mt-6 text-[clamp(4rem,12vw,8rem)]">{info.label}</h3>
 
-        <div className="mt-8 flex items-end gap-3 sm:gap-5">
-          <div>
-            <p className="eyebrow text-[0.6rem]! text-smoke">From</p>
-            <p className="display mt-1 text-[clamp(2.4rem,6vw,3.8rem)] leading-none">{shift.startLabel}</p>
-          </div>
-          <span className="mb-3 h-px flex-1 bg-bone/20" />
-          <div className="text-right">
-            <p className="eyebrow text-[0.6rem]! text-smoke">To{shift.provisional ? ' *' : ''}</p>
-            <p className="display mt-1 text-[clamp(2.4rem,6vw,3.8rem)] leading-none">{shift.endLabel}</p>
-          </div>
-        </div>
+        <ul className="mt-6">
+          {list.map((s) => (
+            <li key={s.id} className="border-t border-bone/12 py-4 first:border-t-0 first:pt-2">
+              <p className="eyebrow text-[0.6rem]! text-smoke">{partOfDay(s)}</p>
+              <div className="mt-2 flex items-end gap-3 sm:gap-5">
+                <p className="display text-[clamp(2rem,5vw,3.2rem)] leading-none whitespace-nowrap">{s.startLabel}</p>
+                <span className="mb-2.5 h-px flex-1 bg-bone/20" />
+                <p className="display text-[clamp(2rem,5vw,3.2rem)] leading-none whitespace-nowrap">{s.endLabel}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
 
-        <p className="mt-6 text-[0.95rem] text-bone/65">{shift.note}</p>
+        <p className="mt-4 text-[0.95rem] text-bone/65">{info.note}</p>
 
         <div className="mt-auto pt-8">
           <WaButton intent={women ? 'female' : 'male'} variant={women ? 'solid' : 'bone'} className="w-full sm:w-auto">
-            Join the {shift.label.toLowerCase()}’s shift
+            Join the {info.label.toLowerCase()}’s shift
           </WaButton>
         </div>
       </article>

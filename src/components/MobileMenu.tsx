@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import { gym, shifts } from '../data/gym'
+import { gym, sessions } from '../data/gym'
 import { useKeys, useScrollLock } from '../hooks'
 import { WaButton } from './ui/WaButton'
 import { navItems } from './Navbar'
@@ -67,11 +67,14 @@ export function MobileMenu({ open, onClose, active }: { open: boolean; onClose: 
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <div className="flex flex-col gap-1 text-sm text-smoke min-[400px]:flex-row min-[400px]:justify-between">
-              {shifts.map((s) => (
-                <span key={s.id}>
-                  <span className="text-bone">{s.label}</span> {s.startLabel} – {s.endLabel}
-                </span>
+            <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm text-smoke">
+              {sessions.map((s) => (
+                <p key={s.id} className="contents">
+                  <span className="text-bone">{s.label}</span>
+                  <span className="tabular-nums">
+                    {s.startLabel} – {s.endLabel}
+                  </span>
+                </p>
               ))}
             </div>
             <WaButton intent="general" className="w-full">

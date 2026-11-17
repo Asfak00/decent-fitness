@@ -1,5 +1,5 @@
 import { ArrowUpRight, Mail, MapPin, Phone } from 'lucide-react'
-import { gym, shifts } from '../data/gym'
+import { gym, sessions } from '../data/gym'
 import { media } from '../data/media'
 import { whatsappLink } from '../utils/whatsapp'
 import { FacebookIcon, WhatsAppIcon } from './ui/Icons'
@@ -115,7 +115,7 @@ export function Footer() {
         <div className="lg:col-span-3">
           <p className="eyebrow text-smoke">Training hours</p>
           <ul className="mt-5 divide-y divide-bone/10 border-y border-bone/10">
-            {shifts.map((s) => (
+            {sessions.map((s) => (
               <li key={s.id} className="flex items-baseline justify-between gap-4 py-4">
                 <span className="display text-2xl">{s.label}</span>
                 <span className="text-sm text-bone/75 tabular-nums">

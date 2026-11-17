@@ -1,7 +1,7 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import { MapPin } from 'lucide-react'
-import { gym, shifts } from '../data/gym'
+import { gym, sessionsFor } from '../data/gym'
 import { media } from '../data/media'
 import { useShiftNow } from '../hooks'
 import { Picture } from './ui/Picture'
@@ -18,8 +18,7 @@ export function Hero() {
   const yB = useTransform(scrollYProgress, [0, 1], ['0%', reduce ? '0%' : '-30%'])
   const { current, next } = useShiftNow()
 
-  const women = shifts[0]
-  const men = shifts[1]
+  const times = (g: 'women' | 'men') => sessionsFor(g).map((x) => `${x.startLabel} – ${x.endLabel}`)
 
   return (
     <section
@@ -101,7 +100,7 @@ export function Hero() {
                 />
               </motion.div>
             </motion.div>
-            <ShiftTag label={women.label} time={`${women.startLabel} – ${women.endLabel}`} live={current?.id === 'women'} />
+            <ShiftTag label="Women" times={times('women')} live={current?.group === 'women'} />
           </motion.figure>
 
           <motion.figure style={{ y: yB }} className="relative mt-14 lg:mt-24">
@@ -125,7 +124,7 @@ export function Hero() {
                 />
               </motion.div>
             </motion.div>
-            <ShiftTag label={men.label} time={`${men.startLabel} – ${men.endLabel}`} live={current?.id === 'men'} />
+            <ShiftTag label="Men" times={times('men')} live={current?.group === 'men'} />
           </motion.figure>
         </div>
       </div>
@@ -144,11 +143,11 @@ export function Hero() {
           </span>
           {current ? (
             <span>
-              Now training: <span className="text-bone">{current.label}’s shift</span> · until {current.endLabel}
+              Now training: <span className="text-bone">{current.label}’s session</span> · until {current.endLabel}
             </span>
           ) : (
             <span>
-              Closed now · <span className="text-bone">{next.label}’s shift</span> opens {next.startLabel}
+              Closed now · <span className="text-bone">{next.label}’s session</span> opens {next.startLabel}
             </span>
           )}
         </p>
@@ -167,12 +166,16 @@ export function Hero() {
   )
 }
 
-function ShiftTag({ label, time, live }: { label: string; time: string; live: boolean }) {
+function ShiftTag({ label, times, live }: { label: string; times: string[]; live: boolean }) {
   return (
     <figcaption className="mt-3 flex items-start justify-between gap-2 border-t border-bone/15 pt-2.5">
       <span>
         <span className="display block text-xl leading-none sm:text-2xl">{label}</span>
-        <span className="mt-1 block text-[0.7rem] tracking-[0.08em] text-smoke uppercase sm:text-xs">{time}</span>
+        {times.map((t) => (
+          <span key={t} className="mt-1 block text-[0.7rem] tracking-[0.08em] whitespace-nowrap text-smoke uppercase sm:text-xs">
+            {t}
+          </span>
+        ))}
       </span>
       {live && (
         <span className="eyebrow mt-0.5 shrink-0 bg-turf/15 px-1.5 py-0.5 text-[0.6rem]! tracking-[0.18em]! text-[#7fd08a]">

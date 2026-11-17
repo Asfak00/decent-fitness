@@ -1,14 +1,14 @@
 import { media } from '../data/media'
-import { shifts } from '../data/gym'
+import { hoursFor } from '../data/gym'
 import { Picture } from './ui/Picture'
 import { ImageReveal, Reveal } from './ui/Reveal'
 
 const reasons = [
   {
-    proof: '8–4',
+    proof: '1–4:30',
     unit: 'women only',
     title: 'Hours that belong to you',
-    body: `Women train ${shifts[0].startLabel} – ${shifts[0].endLabel}, men ${shifts[1].startLabel} – ${shifts[1].endLabel}. No awkward overlap, full focus for everyone.`,
+    body: `Women train ${hoursFor('women')}. Men train ${hoursFor('men', ' and ')}. No overlap, full focus for everyone.`,
   },
   {
     proof: '−32',

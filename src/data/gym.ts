@@ -4,19 +4,18 @@
  * otherwise. Edit this file to update the website.
  */
 
-export type ShiftId = 'women' | 'men'
+export type ShiftGroup = 'women' | 'men'
 
-export interface Shift {
-  id: ShiftId
+/** One continuous block of training time for one group. */
+export interface Session {
+  id: string
+  group: ShiftGroup
   label: string
-  /** 24h clock, Asia/Dhaka */
+  /** 24h clock, Asia/Dhaka (fractions allowed: 16.5 = 4:30 PM) */
   start: number
   end: number
   startLabel: string
   endLabel: string
-  /** true when the time is still waiting on confirmation from the gym */
-  provisional: boolean
-  note: string
 }
 
 export const gym = {
@@ -52,29 +51,28 @@ export const gym = {
   timezone: 'Asia/Dhaka',
 } as const
 
-export const shifts: Shift[] = [
-  {
-    id: 'women',
-    label: 'Women',
-    start: 8,
-    end: 16,
-    startLabel: '8:00 AM',
-    endLabel: '4:00 PM',
-    provisional: false,
-    note: 'Dedicated women-only training hours.',
-  },
-  {
-    id: 'men',
-    label: 'Men',
-    start: 16,
-    end: 23,
-    startLabel: '4:00 PM',
-    endLabel: '11:00 PM',
-    // Gym stated the men's shift ends before 11 PM; start/end awaiting final confirmation.
-    provisional: true,
-    note: 'Men’s training hours. Closing time may be earlier, so please confirm on WhatsApp.',
-  },
+/**
+ * Daily training sessions, in order. Men train morning and evening; women
+ * train in the afternoon. Edit here and every section updates.
+ */
+export const sessions: Session[] = [
+  { id: 'men-morning', group: 'men', label: 'Men', start: 8, end: 13, startLabel: '8:00 AM', endLabel: '1:00 PM' },
+  { id: 'women', group: 'women', label: 'Women', start: 13, end: 16.5, startLabel: '1:00 PM', endLabel: '4:30 PM' },
+  { id: 'men-evening', group: 'men', label: 'Men', start: 16.5, end: 23, startLabel: '4:30 PM', endLabel: '11:00 PM' },
 ]
+
+export const groupInfo: Record<ShiftGroup, { label: string; note: string }> = {
+  women: { label: 'Women', note: 'Dedicated women-only training hours every afternoon.' },
+  men: { label: 'Men', note: 'Two sessions a day: train before work or after it.' },
+}
+
+export const sessionsFor = (group: ShiftGroup) => sessions.filter((s) => s.group === group)
+
+/** e.g. "8:00 AM – 1:00 PM & 4:30 PM – 11:00 PM" */
+export const hoursFor = (group: ShiftGroup, joiner = ' & ') =>
+  sessionsFor(group)
+    .map((s) => `${s.startLabel} – ${s.endLabel}`)
+    .join(joiner)
 
 /** Prefilled WhatsApp messages per call-to-action. */
 export const whatsappMessages = {

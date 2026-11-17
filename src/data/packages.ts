@@ -35,7 +35,7 @@ export const admission = {
 const commonIncludes = [
   'Full access to free weights & machines',
   'Trainer guidance on the floor',
-  'Your shift: women 8 AM – 4 PM · men 4 PM – 11 PM',
+  'Your shift: women 1 – 4:30 PM, men 8 AM – 1 PM and 4:30 – 11 PM',
 ]
 
 export const packages: MembershipPackage[] = [

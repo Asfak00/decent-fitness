@@ -1,6 +1,6 @@
 import { HeartPulse, Clock3, Users } from 'lucide-react'
 import { media } from '../data/media'
-import { shifts } from '../data/gym'
+import { hoursFor } from '../data/gym'
 import { Picture } from './ui/Picture'
 import { ImageReveal, Reveal, SplitLine } from './ui/Reveal'
 
@@ -9,7 +9,7 @@ export function About() {
     {
       icon: Users,
       title: 'Separate shifts',
-      body: `Women ${shifts[0].startLabel} – ${shifts[0].endLabel}. Men ${shifts[1].startLabel} – ${shifts[1].endLabel}.`,
+      body: `Women ${hoursFor('women')}. Men ${hoursFor('men')}.`,
     },
     { icon: Clock3, title: 'Trainer on the floor', body: 'Ask questions, get corrected and keep progressing in every session.' },
     {

@@ -77,8 +77,11 @@ Member story video: reel 2233386347210423 — caption: "Decent fitness-এর �
 
 | Shift | Time | Status |
 |---|---|---|
-| Women | 8:00 AM – 4:00 PM | **Confirmed by client brief** |
-| Men | 4:00 PM – 11:00 PM | **Provisional** — client said it ends *before* 11 PM. Edit `shifts` in `src/data/gym.ts`; set `provisional: false` once confirmed |
+| Men (morning) | 8:00 AM – 1:00 PM | Confirmed by client (18 Nov 2026) |
+| Women | 1:00 PM – 4:30 PM | Confirmed by client (18 Nov 2026) |
+| Men (evening) | 4:30 PM – 11:00 PM | Confirmed by client (18 Nov 2026) |
+
+Edit `sessions` in `src/data/gym.ts` to change times; every section, the live indicator and the FAQ follow it. The meta descriptions in `index.html`, `public/site.webmanifest` and the preview image need updating by hand.
 
 Facebook says "Always open" — this was **not** used. Days of operation (e.g. Friday) were not published; the site does not claim "every day".
 
@@ -122,7 +125,7 @@ load and play. To self-host instead, put an MP4 in `public/assets/videos/` and s
 ## 9. Missing — please provide
 
 1. **Trainer details** — name(s), photo(s), shift, experience/certifications → `src/data/trainers.ts` (section appears automatically).
-2. **Men's shift exact times** (start and closing).
+2. ~~Men's shift exact times~~ Confirmed 18 Nov 2026 (see §6).
 3. **Days open** (is Friday different?).
 4. **Full price list** — 6-month, yearly, personal training, couple/student rates; whether the ৳1,500 admission offer has an end date.
 5. **Original video files** (MP4) for a walkthrough/hero video — would replace the Facebook embed.
@@ -143,6 +146,6 @@ load and play. To self-host instead, put an MP4 in `public/assets/videos/` and s
 | Coaching | Trainer CTA (profiles hidden until provided) + inspiration wall (clearly not affiliated) |
 | Videos | 7 reels via official FB player |
 | Membership | ৳1,500 admission (reg. ৳2,000), ৳1,000/month, 3-month free-admission offer |
-| Schedule | Women 8–4, men 4–11 (provisional), timeline + panels |
+| Schedule | Men 8–1, women 1–4:30, men 4:30–11; timeline + panels |
 | Gallery | 11 images, 4 filters, lightbox |
 | FAQ | Verified answers; WhatsApp where info is missing |

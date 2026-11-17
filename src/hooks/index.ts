@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { gym, shifts, type Shift } from '../data/gym'
+import { gym, sessions, type Session } from '../data/gym'
 
 /** true once the page has scrolled past `offset` px. */
 export function useScrolled(offset = 40) {
@@ -62,11 +62,11 @@ export interface ShiftNow {
   /** current Dhaka time in hours (fractional) */
   hour: number
   timeLabel: string
-  current: Shift | null
-  next: Shift
+  current: Session | null
+  next: Session
 }
 
-/** Which training shift is running right now in Dhaka. Updates every minute. */
+/** Which training session is running right now in Dhaka. Updates every minute. */
 export function useShiftNow(): ShiftNow {
   const compute = (): ShiftNow => {
     const now = new Date()
@@ -79,8 +79,8 @@ export function useShiftNow(): ShiftNow {
     const h = Number(parts.find((p) => p.type === 'hour')?.value ?? 0)
     const m = Number(parts.find((p) => p.type === 'minute')?.value ?? 0)
     const hour = h + m / 60
-    const current = shifts.find((s) => hour >= s.start && hour < s.end) ?? null
-    const next = shifts.find((s) => s.start > hour) ?? shifts[0]
+    const current = sessions.find((s) => hour >= s.start && hour < s.end) ?? null
+    const next = sessions.find((s) => s.start > hour) ?? sessions[0]
     const timeLabel = new Intl.DateTimeFormat('en-US', {
       timeZone: gym.timezone,
       hour: 'numeric',
